@@ -9,9 +9,7 @@ import se.michaelthelin.spotify.requests.data.playlists.AddItemsToPlaylistReques
 import se.michaelthelin.spotify.requests.data.playlists.CreatePlaylistRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SpotifyWrapper {
     public SpotifyApi spotifyApi;
@@ -79,12 +77,31 @@ public class SpotifyWrapper {
 
             for (AlbumSimplified albumSimplified : album) {
                 String albumID = albumSimplified.getId();
+
                 GetAlbumsTracksRequest getAlbumsTracksRequest = spotifyApi.getAlbumsTracks(albumID).build();
                 Paging<TrackSimplified> trackSimplifiedPaging = getAlbumsTracksRequest.execute();
 
                 List<TrackSimplified> tracks = Arrays.stream(trackSimplifiedPaging.getItems()).toList();
                 for (TrackSimplified track : tracks) {
-                    trackData.add(new TrackData(track.getName(), track.getId()));
+                    String artists = "";
+                    ArtistSimplified[] trackArtists = track.getArtists();
+                    for (int i = 0; i < trackArtists.length; i++) {
+                        ArtistSimplified artist = trackArtists[i];
+                        if (i == 0) {
+                            artists = artists + artist.getName();
+                        } else {
+                            artists = artists + "; " + artist.getName();
+                        }
+                    }
+
+                    trackData.add(
+                            new TrackData(track.getName(),
+                                    track.getId(),
+                                    track.getDurationMs(),
+                                    albumSimplified.getReleaseDate(),
+                                    albumSimplified.getName(),
+                                    artists
+                            ));
                 }
             }
 
@@ -98,7 +115,26 @@ public class SpotifyWrapper {
 
                 List<TrackSimplified> tracks = Arrays.stream(trackSimplifiedPaging.getItems()).toList();
                 for (TrackSimplified track : tracks) {
-                    trackData.add(new TrackData(track.getName(), track.getId()));
+
+                    String artists = "";
+                    ArtistSimplified[] trackArtists = track.getArtists();
+                    for (int i = 0; i < trackArtists.length; i++) {
+                        ArtistSimplified artist = trackArtists[i];
+                        if (i == 0) {
+                            artists = artists + artist.getName();
+                        } else {
+                            artists = artists + "; " + artist.getName();
+                        }
+                    }
+
+                    trackData.add(
+                            new TrackData(track.getName(),
+                                    track.getId(),
+                                    track.getDurationMs(),
+                                    singlesSimplified.getReleaseDate(),
+                                    singlesSimplified.getName(),
+                                    artists
+                            ));
                 }
             }
 
@@ -112,7 +148,25 @@ public class SpotifyWrapper {
 
                 List<TrackSimplified> tracks = Arrays.stream(trackSimplifiedPaging.getItems()).toList();
                 for (TrackSimplified track : tracks) {
-                    trackData.add(new TrackData(track.getName(), track.getId()));
+                    String artists = "";
+                    ArtistSimplified[] trackArtists = track.getArtists();
+                    for (int i = 0; i < trackArtists.length; i++) {
+                        ArtistSimplified artist = trackArtists[i];
+                        if (i == 0) {
+                            artists = artists + artist.getName();
+                        } else {
+                            artists = artists + "; " + artist.getName();
+                        }
+                    }
+
+                    trackData.add(
+                            new TrackData(track.getName(),
+                                    track.getId(),
+                                    track.getDurationMs(),
+                                    compsSimplified.getReleaseDate(),
+                                    compsSimplified.getName(),
+                                    artists
+                            ));
                 }
             }
         } catch (Exception e) {

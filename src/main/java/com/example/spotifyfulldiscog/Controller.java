@@ -64,15 +64,23 @@ public class Controller {
     }
 
     public void exportCSV() {
-        String CSV_SEPARATOR = ",";
+        String CSV_SEPARATOR = ";";
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("tracks.csv")));
+
             for (TrackData track : playlistTracks) {
                 StringBuffer oneLine = new StringBuffer();
                 oneLine.append(track.getName());
-
                 oneLine.append(CSV_SEPARATOR);
                 oneLine.append(track.getId());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(track.getTime());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(track.getReleaseDate());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(track.getAlbum());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(track.getArtists());
                 bw.write(oneLine.toString());
                 bw.newLine();
             }
@@ -116,13 +124,21 @@ public class Controller {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         TableColumn idCol = new TableColumn("Track ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn timeCol = new TableColumn<>("Time");
+        timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+        TableColumn releaseDateCol = new TableColumn<>("Release Date");
+        releaseDateCol.setCellValueFactory(new PropertyValueFactory<>("releaseDate"));
+        TableColumn albumCol = new TableColumn<>("Album");
+        albumCol.setCellValueFactory(new PropertyValueFactory<>("album"));
+        TableColumn artistsCol = new TableColumn<>("Artists");
+        artistsCol.setCellValueFactory(new PropertyValueFactory<>("artists"));
 
         // Update Track Count
         lblTrackCount.setText(String.valueOf(trackCleaned.size()));
 
         // Add data to table
         System.out.println(data);
-        tvTracks.getColumns().addAll(nameCol, idCol);
+        tvTracks.getColumns().addAll(nameCol, idCol, timeCol, releaseDateCol, albumCol, artistsCol);
         tvTracks.setItems(data);
     }
 }
