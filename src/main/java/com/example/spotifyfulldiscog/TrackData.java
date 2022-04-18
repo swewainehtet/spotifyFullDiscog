@@ -1,13 +1,10 @@
 package com.example.spotifyfulldiscog;
 
 import javafx.beans.property.SimpleStringProperty;
-import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 
 public class TrackData implements Serializable {
     private SimpleStringProperty name;

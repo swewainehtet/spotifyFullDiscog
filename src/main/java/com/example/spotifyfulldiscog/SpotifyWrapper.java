@@ -9,7 +9,9 @@ import se.michaelthelin.spotify.requests.data.playlists.AddItemsToPlaylistReques
 import se.michaelthelin.spotify.requests.data.playlists.CreatePlaylistRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SpotifyWrapper {
     public SpotifyApi spotifyApi;

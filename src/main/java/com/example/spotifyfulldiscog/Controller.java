@@ -66,6 +66,7 @@ public class Controller {
     public void exportCSV() {
         String CSV_SEPARATOR = ";";
         try {
+
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("tracks.csv")));
 
             for (TrackData track : playlistTracks) {
