@@ -83,6 +83,7 @@ public class Controller {
                 oneLine.append(track.getArtists());
                 bw.write(oneLine.toString());
                 bw.newLine();
+
             }
             bw.flush();
             bw.close();
