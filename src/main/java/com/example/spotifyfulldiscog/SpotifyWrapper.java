@@ -44,17 +44,22 @@ public class SpotifyWrapper {
         userID = user.getId();
     }
 
-    public void generatePlaylist(List<TrackData> playlistTracks) {
-        CreatePlaylistRequest createPlaylistRequest = spotifyApi.createPlaylist(userID, "Auto Generated Playlist Demo")
+    public void generatePlaylist(List<TrackData> playlistTracks, String name) {
+        if (name.isEmpty()) {
+            name = String.valueOf(System.currentTimeMillis());
+        }
+        CreatePlaylistRequest createPlaylistRequest = spotifyApi.createPlaylist(userID, name)
 //          .collaborative(false)
 //          .public_(false)
-                .description("Auto Generated Playlist Demo Custom Description")
+//          .description(desc)
                 .build();
 
         try {
             Playlist playlist = createPlaylistRequest.execute();
             String playlistID = playlist.getId();
-            System.out.println(playlistID);
+
+            System.out.println("Generating Playlist...");
+            // System.out.println(playlistID);
 
             for (int i = 0; i < playlistTracks.size(); i++) {
                 AddItemsToPlaylistRequest addItemsToPlaylistRequest = spotifyApi
@@ -95,7 +100,6 @@ public class SpotifyWrapper {
                             artists = artists + "; " + artist.getName();
                         }
                     }
-
                     trackData.add(
                             new TrackData(track.getName(),
                                     track.getId(),
@@ -128,7 +132,6 @@ public class SpotifyWrapper {
                             artists = artists + "; " + artist.getName();
                         }
                     }
-
                     trackData.add(
                             new TrackData(track.getName(),
                                     track.getId(),
@@ -160,7 +163,6 @@ public class SpotifyWrapper {
                             artists = artists + "; " + artist.getName();
                         }
                     }
-
                     trackData.add(
                             new TrackData(track.getName(),
                                     track.getId(),

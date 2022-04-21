@@ -10,15 +10,15 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class Controller {
-    private Utility util = new Utility();
+    private final Utility util = new Utility();
     private String token;
     private SpotifyWrapper wrapper = null;
-    private List<TrackData> playlistTracks = new ArrayList<>();
+    private final List<TrackData> playlistTracks = new ArrayList<>();
 
     @FXML // fx:id="lblAlert";
     private Label lblAlert;
@@ -50,6 +50,15 @@ public class Controller {
     @FXML // fx:id="tvTracks";
     private TableView<TrackData> tvTracks = new TableView<>();
 
+    @FXML // fx:id="tfPlaylistName";
+    private TextField tfPlaylistName;
+
+    @FXML // fx:id="dpStart";
+    private DatePicker dpStart;
+
+    @FXML // fx:id="dpEnd";
+    private DatePicker dpEnd;
+
     public void setToken() {
         wrapper = new SpotifyWrapper(tfToken.getText());
 
@@ -66,11 +75,11 @@ public class Controller {
     }
 
     public void exportCSV() {
+        System.out.println("Exporting .csv");
+
         String CSV_SEPARATOR = ";";
         try {
-
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("tracks.csv")));
-
             for (TrackData track : playlistTracks) {
                 StringBuffer oneLine = new StringBuffer();
                 oneLine.append(track.getName());
@@ -86,20 +95,25 @@ public class Controller {
                 oneLine.append(track.getArtists());
                 bw.write(oneLine.toString());
                 bw.newLine();
-
             }
             bw.flush();
             bw.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("Task Complete.");
     }
 
     public void generatePlaylist() {
-        wrapper.generatePlaylist(playlistTracks);
+        List<TrackData> list = util.clearDuplicates(playlistTracks);
+        list.sort(Comparator.comparingInt(TrackData::getDateComp).reversed());
+
+        wrapper.generatePlaylist(list, tfPlaylistName.getText());
 
         // Update Alert
-        lblAlert.setText("Generated Playlist");
+//        lblAlert.setText("Generated Playlist");
+        System.out.println("Task Complete.");
     }
 
     public void getTracks() {
@@ -107,21 +121,36 @@ public class Controller {
         tvTracks.getItems().clear();
         tvTracks.getColumns().clear();
 
+        System.out.println("Compiling Tracks...");
+
         List<TrackData> tracks = wrapper.getAllTracks(tfArtistID.getText());
         List<TrackData> trackCleaned = util.clearDuplicates(tracks);
         trackCleaned.sort(Comparator.comparingInt(TrackData::getDateComp).reversed());
 
-        System.out.println(wrapper.getAllTracks(tfArtistID.getText()));
+        int dateStart = 0;
+        int dateEnd = Integer.MAX_VALUE;
+        if (!(dpStart.getValue() == null)) {
+            dateStart = Integer.parseInt(dpStart.getValue().toString().replace("-", ""));
+        } else if (!(dpEnd.getValue() == null)) {
+            dateEnd = Integer.parseInt(dpEnd.getValue().toString().replace("-", ""));
+        }
+
+        for(Iterator<TrackData> iterator = trackCleaned.iterator(); iterator.hasNext();) {
+            if (iterator.next().getDateComp() < dateStart || iterator.next().getDateComp() > dateEnd) {
+                iterator.remove();
+            }
+        }
+
+        // System.out.println(wrapper.getAllTracks(tfArtistID.getText()));
+        ObservableList<TrackData> data = FXCollections.observableList(trackCleaned);
 
         // Convert pulled data to trackData
-        ObservableList<TrackData> data = FXCollections.observableArrayList();
-
         for (TrackData track : trackCleaned) {
             // Add tracks to playlist holder
             playlistTracks.add(track);
 
             // Add tracks to tableview holder
-            data.add(track);
+//            data.add(track);
         }
 
         // Create columns
@@ -142,8 +171,14 @@ public class Controller {
         lblTrackCount.setText(String.valueOf(trackCleaned.size()));
 
         // Add data to table
-        System.out.println(data);
+        System.out.println("Updating Table...");
+        // System.out.println(data);
         tvTracks.getColumns().addAll(nameCol, idCol, timeCol, releaseDateCol, albumCol, artistsCol);
         tvTracks.setItems(data);
+
+        tvTracks.refresh();
+        data.removeAll();
+
+        System.out.println("Task Complete.");
     }
 }
