@@ -2,8 +2,6 @@ package com.example.spotifyfulldiscog;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class TrackData implements Serializable {
@@ -14,6 +12,9 @@ public class TrackData implements Serializable {
     private SimpleStringProperty releaseDate;
     private SimpleStringProperty album;
 
+    public int getDateComp() {
+        return Integer.parseInt(releaseDate.get().replace("-",""));
+    }
 
     public TrackData(String name, String id, Integer time, String releaseDate, String album, String artists) {
         this.name = new SimpleStringProperty(name);
@@ -129,10 +130,4 @@ public class TrackData implements Serializable {
     public String toString() {
         return "TrackData{" + "name=" + name + ", id=" + id + '}';
     }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(getName());
-        out.writeObject(getId());
-    }
-
 }

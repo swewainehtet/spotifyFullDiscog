@@ -10,6 +10,8 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 public class Controller {
@@ -107,6 +109,7 @@ public class Controller {
 
         List<TrackData> tracks = wrapper.getAllTracks(tfArtistID.getText());
         List<TrackData> trackCleaned = util.clearDuplicates(tracks);
+        trackCleaned.sort(Comparator.comparingInt(TrackData::getDateComp).reversed());
 
         System.out.println(wrapper.getAllTracks(tfArtistID.getText()));
 
