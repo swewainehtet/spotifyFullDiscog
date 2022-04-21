@@ -145,13 +145,10 @@ public class Controller {
         ObservableList<TrackData> data = FXCollections.observableList(trackCleaned);
 
         // Convert pulled data to trackData
-        for (TrackData track : trackCleaned) {
-            // Add tracks to playlist holder
-            playlistTracks.add(track);
-
-            // Add tracks to tableview holder
-//            data.add(track);
-        }
+        // Add tracks to playlist holder
+        // Add tracks to tableview holder
+        //            data.add(track);
+        playlistTracks.addAll(trackCleaned);
 
         // Create columns
         TableColumn nameCol = new TableColumn<>("Name");
