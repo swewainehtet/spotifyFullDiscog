@@ -28,6 +28,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.1" level="project" />
     <orderEntry type="library" name="se.michaelthelin.spotify.web.api.java" level="project" />
     <orderEntry type="library" name="google.code.gson" level="project" />
-    <orderEntry type="library" name="openjfx.javafx.base" level="project" />
+    <orderEntry type="library" name="javafx-base-17.0.1" level="project" />
   </component>
 </module>
