@@ -97,7 +97,7 @@ public class SpotifyWrapper {
                         if (i == 0) {
                             artists = artists + artist.getName();
                         } else {
-                            artists = artists + "; " + artist.getName();
+                            artists = artists + ";" + artist.getName();
                         }
                     }
                     trackData.add(
@@ -129,7 +129,7 @@ public class SpotifyWrapper {
                         if (i == 0) {
                             artists = artists + artist.getName();
                         } else {
-                            artists = artists + "; " + artist.getName();
+                            artists = artists + ";" + artist.getName();
                         }
                     }
                     trackData.add(
@@ -160,7 +160,7 @@ public class SpotifyWrapper {
                         if (i == 0) {
                             artists = artists + artist.getName();
                         } else {
-                            artists = artists + "; " + artist.getName();
+                            artists = artists + ";" + artist.getName();
                         }
                     }
                     trackData.add(
