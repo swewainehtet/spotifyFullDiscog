@@ -47,6 +47,9 @@ public class Controller {
     @FXML // fx:id="btnExportCSV";
     private Button btnExportCSV;
 
+    @FXML // fx:id="btnViewRecent";
+    private Button btnViewRecent;
+
     @FXML // fx:id="tvTracks";
     private TableView<TrackData> tvTracks = new TableView<>();
 
@@ -71,7 +74,57 @@ public class Controller {
         tfArtistID.setDisable(false);
         tvTracks.setDisable(false);
         btnExportCSV.setDisable(false);
+        btnViewRecent.setDisable(false);
         // btnAutoSearch.setDisable(false);
+    }
+
+    public void viewRecent() {
+        List<TrackData> tracks = wrapper.viewRecent();
+
+        // Clear table
+        tvTracks.getItems().clear();
+        tvTracks.getColumns().clear();
+
+        System.out.println("Exploring recent tracks...");
+
+        List<TrackData> trackCleaned = util.clearDuplicates(tracks);
+
+        // System.out.println(wrapper.getAllTracks(tfArtistID.getText()));
+        ObservableList<TrackData> data = FXCollections.observableList(trackCleaned);
+
+        // Convert pulled data to trackData
+        // Add tracks to playlist holder
+        // Add tracks to tableview holder
+        //            data.add(track);
+        playlistTracks.addAll(trackCleaned);
+
+        // Create columns
+        TableColumn nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn idCol = new TableColumn("Track ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn timeCol = new TableColumn<>("Time");
+        timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+        TableColumn releaseDateCol = new TableColumn<>("Release Date");
+        releaseDateCol.setCellValueFactory(new PropertyValueFactory<>("releaseDate"));
+        TableColumn albumCol = new TableColumn<>("Album");
+        albumCol.setCellValueFactory(new PropertyValueFactory<>("album"));
+        TableColumn artistsCol = new TableColumn<>("Artists");
+        artistsCol.setCellValueFactory(new PropertyValueFactory<>("artists"));
+
+        // Update Track Count
+        lblTrackCount.setText(String.valueOf(trackCleaned.size()));
+
+        // Add data to table
+        System.out.println("Updating Table...");
+        // System.out.println(data);
+        tvTracks.getColumns().addAll(nameCol, idCol, timeCol, releaseDateCol, albumCol, artistsCol);
+        tvTracks.setItems(data);
+
+        tvTracks.refresh();
+        data.removeAll();
+
+        System.out.println("Task Complete.");
     }
 
     public void exportCSV() {

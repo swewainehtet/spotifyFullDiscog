@@ -1,14 +1,18 @@
 package com.example.spotifyfulldiscog;
 
 import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.special.SnapshotResult;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.data.albums.GetAlbumsTracksRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistsAlbumsRequest;
+import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.playlists.AddItemsToPlaylistRequest;
 import se.michaelthelin.spotify.requests.data.playlists.CreatePlaylistRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +46,43 @@ public class SpotifyWrapper {
         assert user != null;
         userName = user.getDisplayName();
         userID = user.getId();
+    }
+
+    public List<TrackData> viewRecent() {
+        GetCurrentUsersRecentlyPlayedTracksRequest getCurrentUsersRecentlyPlayedTracksRequest =
+                spotifyApi.getCurrentUsersRecentlyPlayedTracks().limit(50).build();
+
+        List<TrackData> trackData = new ArrayList<>();
+        try {
+            final PagingCursorbased<PlayHistory> playHistoryPagingCursorbased = getCurrentUsersRecentlyPlayedTracksRequest.execute();
+            List<PlayHistory> recentTracks = Arrays.stream(playHistoryPagingCursorbased.getItems()).toList();
+
+            for (PlayHistory recentTrack : recentTracks) {
+                String artists = "";
+                ArtistSimplified[] trackArtists = recentTrack.getTrack().getArtists();
+                for (int i = 0; i < trackArtists.length; i++) {
+                    ArtistSimplified artist = trackArtists[i];
+                    if (i == 0) {
+                        artists = artists + artist.getName();
+                    } else {
+                        artists = artists + ";" + artist.getName();
+                    }
+                }
+                trackData.add(
+                        new TrackData(recentTrack.getTrack().getName(),
+                                recentTrack.getTrack().getId(),
+                                recentTrack.getTrack().getDurationMs(),
+                                "0",
+                                recentTrack.getTrack().getName(),
+                                artists
+                        ));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return trackData;
     }
 
     public void generatePlaylist(List<TrackData> playlistTracks, String name) {
