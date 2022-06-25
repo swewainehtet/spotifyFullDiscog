@@ -71,6 +71,7 @@
                   <TextField fx:id="tfPlaylistName" prefHeight="25.0" prefWidth="157.0" promptText="Playlist Name" />
                       <Button fx:id="btnGenerate" disable="true" mnemonicParsing="false" onMouseClicked="#generatePlaylist" prefHeight="25.0" prefWidth="110.0" text="Generate Playlist" />
                   <Button fx:id="btnExportCSV" disable="true" mnemonicParsing="false" onMouseClicked="#exportCSV" prefHeight="25.0" prefWidth="110.0" text="Export .csv" />
+                  <Button fx:id="btnViewRecent" disable="true" mnemonicParsing="false" onMouseClicked="#viewRecent" text="View Recent" />
                   </children>
               </HBox>
          </children>
